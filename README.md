@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+```<?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 }
-
+```
 
 ---
 ---
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
 ---
 
 
-
+```
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -153,7 +153,7 @@ public class MainActivity extends Activity {
         });
     }
 }
-
+```
 ---
 ---
 ---
