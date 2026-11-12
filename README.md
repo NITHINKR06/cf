@@ -1,161 +1,69 @@
-```<?xml version="1.0" encoding="utf-8"?>
+Procedure
+```Part A: Data Hiding & Extraction
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="20dp">
+1. Hiding Data (Embedding)
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Student Grade Calculator"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        android:layout_gravity="center"
-        android:layout_marginBottom="20dp"/>
+    Launch OpenStego and select the Data Hiding tab on the left panel.
 
-    <EditText
-        android:id="@+id/marks"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter Marks"
-        android:inputType="number"/>
+    Message File: Click Browse and select the secret file to hide (e.g., secret.txt).
 
-    <Button
-        android:id="@+id/calculate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Calculate Grade"
-        android:layout_marginTop="15dp"/>
+    Cover File: Select the host image file (cover.png) that will carry the hidden payload.
 
-    <TextView
-        android:id="@+id/result"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="22sp"
-        android:gravity="center"
-        android:layout_marginTop="20dp"/>
+    Output Stego File: Specify the destination path and filename for the generated stego image (e.g., stego_output.png).
 
-</LinearLayout>
+    Encryption Options (Optional): Select an encryption algorithm (e.g., AES128 or AES256) and enter a Password to secure the hidden message.
 
-main.java
+    Click Hide Data. A confirmation dialog appears once embedding completes.
 
-package com.example.h;
+2. Extracting Data (Retrieving)
 
-import android.os.Bundle;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
+    Switch to the Extract Data section under the Data Hiding tab.
 
-import androidx.appcompat.app.AppCompatActivity;
+    Input Stego File: Browse and select the stego_output.png file.
 
-public class MainActivity extends AppCompatActivity {
+    Output Folder: Choose the directory where the extracted secret file should be saved.
 
-    EditText marks;
-    Button calculate;
-    TextView result;
+    Enter the Password used during the hiding phase.
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        marks = findViewById(R.id.marks);
-        calculate = findViewById(R.id.calculate);
-        result = findViewById(R.id.result);
-
-        calculate.setOnClickListener(v -> {
-
-            int m = Integer.parseInt(marks.getText().toString());
-
-            if (m >= 90)
-                result.setText("Grade: A+");
-            else if (m >= 80)
-                result.setText("Grade: A");
-            else if (m >= 70)
-                result.setText("Grade: B");
-            else if (m >= 60)
-                result.setText("Grade: C");
-            else if (m >= 50)
-                result.setText("Grade: D");
-            else
-                result.setText("Grade: F");
-        });
-    }
-}
-```
-
----
----
----
----
-
+    Click Extract Data. Verify that the original secret.txt file is recovered intact.
 
 ```
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="20dp"
-    android:gravity="center">
 
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter Password"
-        android:inputType="textPassword" />
+---
 
-    <CheckBox
-        android:id="@+id/showPassword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Show Password" />
-
-</LinearLayout>
-
-java:
-package com.example.h;
-
-import android.app.Activity;
-import android.os.Bundle;
-import android.text.method.PasswordTransformationMethod;
-import android.text.method.HideReturnsTransformationMethod;
-import android.widget.CheckBox;
-import android.widget.EditText;
-
-public class MainActivity extends Activity {
-
-    EditText password;
-    CheckBox showPassword;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        password = findViewById(R.id.password);
-        showPassword = findViewById(R.id.showPassword);
-
-        showPassword.setOnCheckedChangeListener((button, checked) -> {
-            if (checked) {
-                password.setTransformationMethod(
-                        HideReturnsTransformationMethod.getInstance());
-            } else {
-                password.setTransformationMethod(
-                        PasswordTransformationMethod.getInstance());
-            }
-
-            password.setSelection(password.getText().length());
-        });
-    }
-}
 ```
----
----
----
+Part B: Digital Watermarking & Verification
 
+1. Generating a Watermark Signature
 
+    Open OpenStego and select the Digital Watermarking tab on the left panel.
+
+    Go to Generate Signature.
+
+    Signature File: Specify a save location and filename for the signature (e.g., owner_watermark.sig).
+
+    Click Generate Signature.
+
+2. Embedding the Watermark
+
+    Select Embed Watermark under the Digital Watermarking tab.
+
+    File(s) to Watermark: Browse and select the original image (original.png).
+
+    Signature File: Select the previously generated owner_watermark.sig file.
+
+    Output File: Specify the destination path for the watermarked image (e.g., watermarked.png).
+
+    Click Embed Watermark.
+
+3. Verifying the Watermark
+
+    Select Verify Watermark under the Digital Watermarking tab.
+
+    Input File(s): Select the watermarked.png image (or a suspected copy).
+
+    Signature File: Load owner_watermark.sig.
+
+    Click Verify Watermark to check the confidence percentage score confirming ownership.
+
+```
