@@ -1,69 +1,83 @@
-Procedure
-```Part A: Data Hiding & Extraction
+- [OpenStego](https://www.openstego.com/)
+- [Registry Explorer](https://ericzimmerman.github.io/)
 
-1. Hiding Data (Embedding)
 
-    Launch OpenStego and select the Data Hiding tab on the left panel.
 
-    Message File: Click Browse and select the secret file to hide (e.g., secret.txt).
+## Experiment 6: Steganography and Watermarking (OpenStego)
 
-    Cover File: Select the host image file (cover.png) that will carry the hidden payload.
+### Part A: Data Hiding and Extraction
 
-    Output Stego File: Specify the destination path and filename for the generated stego image (e.g., stego_output.png).
+**Hide data**
+1. Open OpenStego and go to the **Data Hiding** tab.
+2. Message File: `secret.txt`
+3. Cover File: `cover.png`
+4. Output Stego File: `stego_output.png`
+5. (Optional) Choose AES128 or AES256 and set a password.
+6. Click **Hide Data**.
 
-    Encryption Options (Optional): Select an encryption algorithm (e.g., AES128 or AES256) and enter a Password to secure the hidden message.
+**Extract data**
+1. Go to **Extract Data**.
+2. Input Stego File: `stego_output.png`
+3. Select the output folder.
+4. Enter the password.
+5. Click **Extract Data** and verify `secret.txt` is recovered intact.
 
-    Click Hide Data. A confirmation dialog appears once embedding completes.
+### Part B: Digital Watermarking and Verification
 
-2. Extracting Data (Retrieving)
+**Generate signature**
+1. Open the **Digital Watermarking** tab and select **Generate Signature**.
+2. Save the file as `owner_watermark.sig`.
+3. Click **Generate Signature**.
 
-    Switch to the Extract Data section under the Data Hiding tab.
+**Embed watermark**
+1. Select **Embed Watermark**.
+2. File to Watermark: `original.png`
+3. Signature File: `owner_watermark.sig`
+4. Output File: `watermarked.png`
+5. Click **Embed Watermark**.
 
-    Input Stego File: Browse and select the stego_output.png file.
-
-    Output Folder: Choose the directory where the extracted secret file should be saved.
-
-    Enter the Password used during the hiding phase.
-
-    Click Extract Data. Verify that the original secret.txt file is recovered intact.
-
-```
+**Verify watermark**
+1. Select **Verify Watermark**.
+2. Input File: `watermarked.png` (or a suspected copy)
+3. Signature File: `owner_watermark.sig`
+4. Click **Verify Watermark** and note the confidence percentage.
 
 ---
 
-```
-Part B: Digital Watermarking & Verification
+## Experiment 7: Windows Registry Analysis (Registry Explorer)
 
-1. Generating a Watermark Signature
+### 1. Load hives
+1. Run Registry Explorer as administrator.
+2. Go to **File → Load hive** and select `SYSTEM`, `SOFTWARE`, `SAM`, `NTUSER.DAT`.
+3. If prompted to replay transaction logs (`.LOG1` / `.LOG2`), click **Yes** and save the clean hive to a working folder.
 
-    Open OpenStego and select the Digital Watermarking tab on the left panel.
+### 2. System artifacts
 
-    Go to Generate Signature.
+| Artifact | Hive | Key path | What to note |
+|---|---|---|---|
+| OS info | SOFTWARE | `Microsoft\Windows NT\CurrentVersion` | ProductName, InstallDate, RegisteredOwner |
+| Hostname | SYSTEM | `ControlSet001\Control\ComputerName\ComputerName` | Computer name |
+| Time zone | SYSTEM | `ControlSet001\Control\TimeZoneInformation` | Time zone bias |
+| USB devices | SYSTEM | `ControlSet001\Enum\USBSTOR` | Vendor, model, serial number |
+| Network history | SOFTWARE | `Microsoft\Windows NT\CurrentVersion\NetworkList\Profiles` | Past networks, timestamps |
 
-    Signature File: Specify a save location and filename for the signature (e.g., owner_watermark.sig).
+### 3. User artifacts
 
-    Click Generate Signature.
+| Artifact | Hive | Key path | What to note |
+|---|---|---|---|
+| Local accounts | SAM | `SAM\Domains\Account\Users` | Usernames, RIDs, creation date, last login, failed logins |
+| Recent docs | NTUSER.DAT | `Software\Microsoft\Windows\CurrentVersion\Explorer\RecentDocs` | Recently opened files |
+| Typed URLs | NTUSER.DAT | `Software\Microsoft\Internet Explorer\TypedURLs` | URLs typed by the user |
+| Typed paths | NTUSER.DAT | `Software\Microsoft\Windows\CurrentVersion\Explorer\TypedPaths` | Folder paths typed by the user |
+| Program execution | NTUSER.DAT | `Software\Microsoft\Windows\CurrentVersion\Explorer\UserAssist` | Executable paths, run counts, last run time |
 
-2. Embedding the Watermark
+### 4. Export findings
+Right-click the key or artifact table, choose **Export**, and save as `.csv` or `.txt`.
 
-    Select Embed Watermark under the Digital Watermarking tab.
+---
 
-    File(s) to Watermark: Browse and select the original image (original.png).
+## Notes
 
-    Signature File: Select the previously generated owner_watermark.sig file.
-
-    Output File: Specify the destination path for the watermarked image (e.g., watermarked.png).
-
-    Click Embed Watermark.
-
-3. Verifying the Watermark
-
-    Select Verify Watermark under the Digital Watermarking tab.
-
-    Input File(s): Select the watermarked.png image (or a suspected copy).
-
-    Signature File: Load owner_watermark.sig.
-
-    Click Verify Watermark to check the confidence percentage score confirming ownership.
-
-```
+- Use the same password for hiding and extracting, otherwise extraction fails.
+- Work on copies of the registry hives, never the originals.
+- Take a screenshot at each major step for the lab record.
